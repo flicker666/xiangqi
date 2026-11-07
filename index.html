@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>中国象棋 - 网页版</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>中国象棋</h1>
+  <p class="sub">网页版 · 单机人机对战 · 棋谱 · 残局</p>
+</header>
+
+<main>
+  <div id="status">红方走棋</div>
+
+  <div id="boardWrap">
+    <div id="board">
+      <!-- 棋盘线：viewBox 800x900，9 列 x 10 行 -->
+      <svg id="boardSvg" viewBox="0 0 800 900" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="0" y="0" width="800" height="900" fill="#f0d9a8"/>
+        <!-- 横线 -->
+        <g stroke="#8b5a2b" stroke-width="3">
+          <line x1="0" y1="0" x2="800" y2="0"/><line x1="0" y1="100" x2="800" y2="100"/>
+          <line x1="0" y1="200" x2="800" y2="200"/><line x1="0" y1="300" x2="800" y2="300"/>
+          <line x1="0" y1="400" x2="800" y2="400"/><line x1="0" y1="500" x2="800" y2="500"/>
+          <line x1="0" y1="600" x2="800" y2="600"/><line x1="0" y1="700" x2="800" y2="700"/>
+          <line x1="0" y1="800" x2="800" y2="800"/><line x1="0" y1="900" x2="800" y2="900"/>
+        </g>
+        <!-- 竖线：边线通长，中间线分两段（留出楚河汉界） -->
+        <g stroke="#8b5a2b" stroke-width="3">
+          <line x1="0" y1="0" x2="0" y2="900"/><line x1="800" y1="0" x2="800" y2="900"/>
+          <line x1="100" y1="0" x2="100" y2="400"/><line x1="100" y1="500" x2="100" y2="900"/>
+          <line x1="200" y1="0" x2="200" y2="400"/><line x1="200" y1="500" x2="200" y2="900"/>
+          <line x1="300" y1="0" x2="300" y2="400"/><line x1="300" y1="500" x2="300" y2="900"/>
+          <line x1="400" y1="0" x2="400" y2="400"/><line x1="400" y1="500" x2="400" y2="900"/>
+          <line x1="500" y1="0" x2="500" y2="400"/><line x1="500" y1="500" x2="500" y2="900"/>
+          <line x1="600" y1="0" x2="600" y2="400"/><line x1="600" y1="500" x2="600" y2="900"/>
+          <line x1="700" y1="0" x2="700" y2="400"/><line x1="700" y1="500" x2="700" y2="900"/>
+        </g>
+        <!-- 九宫斜线 -->
+        <g stroke="#8b5a2b" stroke-width="3">
+          <line x1="300" y1="0" x2="500" y2="200"/><line x1="500" y1="0" x2="300" y2="200"/>
+          <line x1="300" y1="700" x2="500" y2="900"/><line x1="500" y1="700" x2="300" y2="900"/>
+        </g>
+        <!-- 炮位 / 兵位角标 -->
+        <g stroke="#8b5a2b" stroke-width="3" fill="none"><path d="M60 185 h25 M85 160 v25 M60 215 h25 M85 240 v-25 M115 160 v25 M140 185 h-25 M115 240 v-25 M140 215 h-25"/><path d="M660 185 h25 M685 160 v25 M660 215 h25 M685 240 v-25 M715 160 v25 M740 185 h-25 M715 240 v-25 M740 215 h-25"/><path d="M60 685 h25 M85 660 v25 M60 715 h25 M85 740 v-25 M115 660 v25 M140 685 h-25 M115 740 v-25 M140 715 h-25"/><path d="M660 685 h25 M685 660 v25 M660 715 h25 M685 740 v-25 M715 660 v25 M740 685 h-25 M715 740 v-25 M740 715 h-25"/><path d="M15 260 v25 M40 285 h-25 M15 340 v-25 M40 315 h-25"/><path d="M15 560 v25 M40 585 h-25 M15 640 v-25 M40 615 h-25"/><path d="M160 285 h25 M185 260 v25 M160 315 h25 M185 340 v-25 M215 260 v25 M240 285 h-25 M215 340 v-25 M240 315 h-25"/><path d="M160 585 h25 M185 560 v25 M160 615 h25 M185 640 v-25 M215 560 v25 M240 585 h-25 M215 640 v-25 M240 615 h-25"/><path d="M360 285 h25 M385 260 v25 M360 315 h25 M385 340 v-25 M415 260 v25 M440 285 h-25 M415 340 v-25 M440 315 h-25"/><path d="M360 585 h25 M385 560 v25 M360 615 h25 M385 640 v-25 M415 560 v25 M440 585 h-25 M415 640 v-25 M440 615 h-25"/><path d="M560 285 h25 M585 260 v25 M560 315 h25 M585 340 v-25 M615 260 v25 M640 285 h-25 M615 340 v-25 M640 315 h-25"/><path d="M560 585 h25 M585 560 v25 M560 615 h25 M585 640 v-25 M615 560 v25 M640 585 h-25 M615 640 v-25 M640 615 h-25"/><path d="M760 285 h25 M785 260 v25 M760 315 h25 M785 340 v-25"/><path d="M760 585 h25 M785 560 v25 M760 615 h25 M785 640 v-25"/></g>
+        <!-- 楚河汉界 -->
+        <text x="200" y="468" font-size="52" fill="#8b5a2b" text-anchor="middle" font-family="serif">楚 河</text>
+        <text x="600" y="468" font-size="52" fill="#8b5a2b" text-anchor="middle" font-family="serif">漢 界</text>
+      </svg>
+      <div id="dots"></div>
+      <div id="pieces"></div>
+    </div>
+  </div>
+
+  <div id="replayBar" style="display:none">
+    <button id="btnReplayPrev">◀ 上一步</button>
+    <span id="replayInfo"></span>
+    <button id="btnReplayNext">下一步 ▶</button>
+    <button id="btnReplayExit">退出复盘</button>
+  </div>
+
+  <section class="controls">
+    <label>模式
+      <select id="modeSel">
+        <option value="ai">人机对战</option>
+        <option value="pvp">双人对弈</option>
+      </select>
+    </label>
+    <label>难度
+      <select id="diffSel">
+        <option value="easy">入门</option>
+        <option value="medium" selected>进阶</option>
+        <option value="master">大师</option>
+      </select>
+    </label>
+    <label>你执
+      <select id="colorSel">
+        <option value="r">红方（先行）</option>
+        <option value="b">黑方（后行）</option>
+      </select>
+    </label>
+  </section>
+
+  <section class="buttons">
+    <button id="btnNew">新局</button>
+    <button id="btnUndo">悔棋</button>
+    <button id="btnSave">保存棋谱</button>
+    <button id="btnExport">导出棋谱</button>
+  </section>
+
+  <section class="audio">
+    <label><input type="checkbox" id="sfxToggle" checked> 音效</label>
+    <label><input type="checkbox" id="bgmToggle"> 背景音乐</label>
+    <label>音量 <input type="range" id="bgmVol" min="0" max="1" step="0.1" value="0.5"></label>
+  </section>
+
+  <section class="panel">
+    <h2>着法</h2>
+    <ol id="movesList"></ol>
+  </section>
+
+  <section class="panel">
+    <h2>残局 <button id="btnExitPuzzle" class="small">退出残局</button></h2>
+    <p id="puzzleInfo" class="hint">红先行，将死黑将过关。选一局开始：</p>
+    <ul id="puzzleList" class="linklist"></ul>
+    <button id="btnHint" class="small">💡 看提示</button>
+  </section>
+
+  <section class="panel">
+    <h2>保存的棋谱</h2>
+    <ul id="savedList" class="linklist"></ul>
+  </section>
+
+  <footer>
+    <p>纯静态网页版，无需安装，打开即玩。AI：Alpha-Beta + 迭代加深；音乐为 WebAudio 程序合成的五声音阶旋律。</p>
+    <p>源码：<a href="https://github.com/flicker666/xiangqi">flicker666/xiangqi</a></p>
+  </footer>
+</main>
+<script src="xiangqi.js"></script>
+</body>
+</html>
